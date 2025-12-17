@@ -1,0 +1,12 @@
+{
+  "movies": [
+    {
+      "id": "1",
+      "title": "Inception",
+      "type": "hollywood",
+      "thumbnail": "assets/inception.jpg",
+      "video": "https://example.com/inception.m3u8",
+      "download": "https://example.com/inception.mp4"
+    }
+  ]
+}
