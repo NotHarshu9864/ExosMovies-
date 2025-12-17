@@ -4,9 +4,9 @@
       "id": "1",
       "title": "Inception",
       "type": "hollywood",
-      "thumbnail": "assets/inception.jpg",
+      "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9GFRtuHP3rsRC7vu5cKxFKwLuE_1ZKxW5Kv4SvT5kGKR1E4iJ8DpaqVWP&s=10",
       "video": "https://example.com/inception.m3u8",
-      "download": "https://example.com/inception.mp4"
+      "download": ""
     }
   ]
 }
