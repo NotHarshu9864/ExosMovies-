@@ -15,12 +15,16 @@
       }
     }
   </script></head>
-<body class="bg-black text-white overflow-x-hidden"><!-- ================= LOADING SCREEN ================= --><div id="loader" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black">
-  <div class="w-16 h-16 border-4 border-neon border-t-transparent rounded-full animate-spin"></div>
-  <p class="mt-4 text-neon tracking-widest">Loading ExosMovies...</p>
+<body class="bg-black text-white overflow-x-hidden"><!-- ================= SKELETON LOADER ================= --><div id="skeleton" class="p-4 md:p-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+  <template id="skeletonCard">
+    <div class="animate-pulse">
+      <div class="h-56 bg-gray-800 rounded-xl"></div>
+      <div class="h-4 bg-gray-700 rounded mt-3 w-3/4"></div>
+    </div>
+  </template>
 </div><!-- ================= HEADER ================= --><header class="sticky top-0 z-40 flex items-center justify-between px-4 py-3 bg-black/80 backdrop-blur border-b border-gray-800">
   <button id="menuBtn" class="md:hidden text-neon text-2xl">☰</button>
-  <h1 class="text-xl font-bold text-neon">ExosMovies</h1>
+  <h1 class="absolute left-1/2 -translate-x-1/2 text-xl font-bold text-neon tracking-widest">ExosMovies</h1>
   <input id="searchInput" type="text" placeholder="Search" class="hidden md:block w-1/3 px-3 py-1.5 rounded bg-gray-900 border border-gray-700 focus:border-neon outline-none" />
 </header><div class="flex"><!-- ================= SIDEBAR ================= --><aside id="sidebar" class="fixed md:static inset-y-0 left-0 w-64 bg-black border-r border-gray-800 p-4 transform -translate-x-full md:translate-x-0 transition z-50">
   <h2 class="text-lg font-semibold text-gray-300 mb-4">Categories</h2>
@@ -30,7 +34,7 @@
     <a href="index.html?type=bollywood" class="block px-3 py-2 rounded hover:bg-gray-800">Bollywood</a>
     <a href="index.html?type=south" class="block px-3 py-2 rounded hover:bg-gray-800">South (Hindi)</a>
   </nav>
-</aside><!-- ================= OVERLAY (MOBILE) ================= --><div id="overlay" class="fixed inset-0 bg-black/70 hidden z-40"></div><!-- ================= MAIN ================= --><main class="flex-1 p-4 md:p-6">  <!-- Mobile Search -->  <input id="searchInputMobile" type="text" placeholder="Search movies..." class="md:hidden w-full mb-4 px-4 py-2 rounded bg-gray-900 border border-gray-700 focus:border-neon outline-none" />  <div id="moviesGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4"></div>
+</aside><!-- ================= OVERLAY (MOBILE) ================= --><div id="overlay" class="fixed inset-0 bg-black/70 hidden z-40"></div><!-- ================= MAIN ================= --><main class="flex-1 p-4 md:p-6 relative">  <!-- Mobile Search -->  <input id="searchInputMobile" type="text" placeholder="Search movies..." class="md:hidden w-full mb-4 px-4 py-2 rounded bg-gray-900 border border-gray-700 focus:border-neon outline-none" />  <div id="moviesGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4"></div>
 </main></div><script>
 /* ================= LOADER ================= */
 window.addEventListener('load', () => {
@@ -61,11 +65,23 @@ let allMovies = [];
 const params = new URLSearchParams(window.location.search);
 const typeFilter = params.get('type');
 
+// ================= ADMIN EDITABLE JSON =================
+// Admin can directly edit data/movies.json to add/remove movies
+
+const skeleton = document.getElementById('skeleton');
+const skeletonTpl = document.getElementById('skeletonCard');
+
+for (let i = 0; i < 12; i++) {
+  skeleton.appendChild(skeletonTpl.content.cloneNode(true));
+}
+
 fetch('data/movies.json')
   .then(res => res.json())
   .then(data => {
     allMovies = data.movies;
+    skeleton.remove();
     renderMovies();
+  });
   });
 
 function renderMovies() {
