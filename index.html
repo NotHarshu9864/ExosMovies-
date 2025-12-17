@@ -1,0 +1,66 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ExosMovies</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-950 text-white"><!-- ================= HEADER ================= --><header class="flex items-center justify-between px-6 py-4 border-b border-gray-800">
+  <h1 class="text-2xl font-bold text-cyan-400">ExosMovies</h1>
+  <input id="searchInput" type="text" placeholder="Search movies..." class="w-1/2 px-4 py-2 rounded-lg bg-gray-900 border border-gray-700 focus:outline-none focus:border-cyan-400" />
+</header><div class="flex"><!-- ================= SIDEBAR ================= --><aside class="w-56 min-h-screen border-r border-gray-800 p-4 space-y-3">
+  <h2 class="text-lg font-semibold text-gray-300">Categories</h2>
+  <a href="index.html" class="block px-3 py-2 rounded hover:bg-gray-800">All</a>
+  <a href="index.html?type=hollywood" class="block px-3 py-2 rounded hover:bg-gray-800">Hollywood</a>
+  <a href="index.html?type=bollywood" class="block px-3 py-2 rounded hover:bg-gray-800">Bollywood</a>
+  <a href="index.html?type=south" class="block px-3 py-2 rounded hover:bg-gray-800">South (Hindi)</a>
+</aside><!-- ================= MAIN ================= --><main class="flex-1 p-6">
+  <div id="moviesGrid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6"></div>
+</main></div><script>
+/* ================= FETCH & RENDER MOVIES ================= */
+const grid = document.getElementById('moviesGrid');
+const searchInput = document.getElementById('searchInput');
+
+let allMovies = [];
+
+const params = new URLSearchParams(window.location.search);
+const typeFilter = params.get('type');
+
+fetch('data/movies.json')
+  .then(res => res.json())
+  .then(data => {
+    allMovies = data.movies;
+    renderMovies();
+  });
+
+function renderMovies() {
+  grid.innerHTML = '';
+  let filtered = allMovies;
+
+  if (typeFilter) {
+    filtered = filtered.filter(m => m.type === typeFilter);
+  }
+
+  const search = searchInput.value.toLowerCase();
+  if (search) {
+    filtered = filtered.filter(m => m.title.toLowerCase().includes(search));
+  }
+
+  filtered.forEach(movie => {
+    const card = document.createElement('div');
+    card.className = 'cursor-pointer group';
+    card.innerHTML = `
+      <a href="player.html?id=${movie.id}">
+        <div class="overflow-hidden rounded-xl">
+          <img src="${movie.thumbnail}" class="w-full h-60 object-cover group-hover:scale-110 transition" />
+        </div>
+        <h3 class="mt-2 text-sm font-semibold">${movie.title}</h3>
+      </a>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+searchInput.addEventListener('input', renderMovies);
+</script></body>
+  </html>
