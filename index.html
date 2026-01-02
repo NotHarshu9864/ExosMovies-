@@ -1,130 +1,122 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Doanin</title>
 <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="bg-black text-white min-h-screen">
 
-<header class="fixed top-0 w-full z-50 bg-black/70 backdrop-blur flex items-center p-4">
+<!-- HEADER -->
+<header class="fixed top-0 w-full z-50 bg-black/80 backdrop-blur flex items-center px-4 py-3">
   <button onclick="toggleMenu()" class="text-2xl mr-4">☰</button>
   <h1 class="text-lg font-bold text-blue-400">Doanin</h1>
 </header>
 
-<!-- Sidebar -->
-<div id="menu" class="fixed inset-0 bg-black/90 hidden z-50 p-6">
+<!-- SIDEBAR -->
+<div id="menu" class="fixed inset-0 bg-black/95 hidden z-50 p-6">
   <button onclick="toggleMenu()" class="text-xl mb-6">✕</button>
-  <a class="block py-2 text-lg" href="index.html">Home</a>
-  <a class="block py-2 text-lg" href="about.html">About</a>
-  <a class="block py-2 text-lg" href="#">Portfolio</a>
+  <a href="index.html" class="block py-3 text-lg">Home</a>
+  <a href="about.html" class="block py-3 text-lg">About</a>
+  <a href="#" class="block py-3 text-lg">Portfolio</a>
 </div>
 
-<main class="pt-20 px-4 max-w-7xl mx-auto">
+<!-- MAIN -->
+<main class="pt-20 px-3 max-w-7xl mx-auto">
 
-<!-- Search -->
+<!-- SEARCH -->
 <input id="search"
- class="w-full p-3 mb-4 rounded bg-gray-900 border border-blue-700"
+ class="w-full p-3 mb-4 rounded bg-gray-900 border border-blue-700 text-sm"
  placeholder="Search movies..." />
 
-<!-- Custom Dropdown -->
+<!-- CATEGORY DROPDOWN -->
 <div class="relative mb-6">
   <button onclick="toggleCat()"
-   class="w-full bg-gray-900 p-3 rounded border border-blue-700 flex justify-between">
-   <span id="catText">All Categories</span> ▼
+   class="w-full bg-gray-900 p-3 rounded border border-blue-700 flex justify-between items-center text-sm">
+   <span id="catText">All Categories</span>
+   <span>▼</span>
   </button>
 
   <div id="catMenu"
-   class="absolute w-full bg-black border border-blue-700 rounded hidden z-20"></div>
+   class="absolute w-full bg-black border border-blue-700 rounded hidden z-30"></div>
 </div>
 
-<!-- Grid -->
+<!-- MOVIES GRID -->
 <div id="movies"
  class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"></div>
 
 </main>
 
-<footer class="text-center py-6 text-gray-500 text-sm">
+<footer class="text-center py-6 text-gray-500 text-xs">
 © Doanin
 </footer>
 
 <script>
-let movies=[], activeCat="all";
+const moviesDiv = document.getElementById('movies');
+const search = document.getElementById('search');
+const catMenu = document.getElementById('catMenu');
+const catText = document.getElementById('catText');
 
-function toggleMenu(){ menu.classList.toggle('hidden'); }
-function toggleCat(){ catMenu.classList.toggle('hidden'); }
+let movies = [], activeCat = "all";
+
+function toggleMenu() {
+  document.getElementById('menu').classList.toggle('hidden');
+}
+
+function toggleCat() {
+  catMenu.classList.toggle('hidden');
+}
 
 fetch('data/movies/data.json')
-.then(r=>r.json())
-.then(d=>{
- movies=d;
- renderCategories();
- render();
+.then(res => res.json())
+.then(data => {
+  movies = data;
+  renderCategories();
+  renderMovies();
 });
 
-function renderCategories(){
- const cats=[...new Set(movies.map(m=>m.category))];
- catMenu.innerHTML='<div onclick="setCat(\'all\')" class="p-3 hover:bg-blue-900">All</div>';
- cats.forEach(c=>{
-  catMenu.innerHTML+=
-   `<div onclick="setCat('${c}')" class="p-3 hover:bg-blue-900">${c}</div>`;
- });
+function renderCategories() {
+  const cats = [...new Set(movies.map(m => m.category))];
+  catMenu.innerHTML =
+    `<div onclick="setCat('all')" class="p-3 hover:bg-blue-900">All</div>`;
+  cats.forEach(c => {
+    catMenu.innerHTML +=
+      `<div onclick="setCat('${c}')" class="p-3 hover:bg-blue-900">${c}</div>`;
+  });
 }
 
-function setCat(c){
- activeCat=c;
- catText.innerText=c==="all"?"All Categories":c;
- catMenu.classList.add('hidden');
- render();
+function setCat(c) {
+  activeCat = c;
+  catText.textContent = c === "all" ? "All Categories" : c;
+  catMenu.classList.add('hidden');
+  renderMovies();
 }
 
-search.oninput=render;
+search.addEventListener('input', renderMovies);
 
-function render(){
- const q=search.value.toLowerCase();
- moviesDiv.innerHTML='';
- movies.filter(m=>
-  m.title.toLowerCase().includes(q) &&
-  (activeCat==="all"||m.category===activeCat)
- ).forEach(m=>{
-  moviesDiv.innerHTML+=`
-   <a href="movie.html?id=${m.id}">
-    <div class="bg-gray-900 rounded-lg overflow-hidden hover:ring-2 ring-blue-500 transition">
-     <img src="${m.poster}" class="h-48 w-full object-cover">
-     <div class="p-3">
-      <h3 class="text-sm font-semibold">${m.title}</h3>
-     </div>
-    </div>
-   </a>`;
- });
+function renderMovies() {
+  const q = search.value.toLowerCase();
+  moviesDiv.innerHTML = "";
+
+  movies
+    .filter(m =>
+      m.title.toLowerCase().includes(q) &&
+      (activeCat === "all" || m.category === activeCat)
+    )
+    .forEach(m => {
+      moviesDiv.innerHTML += `
+      <a href="movie.html?id=${encodeURIComponent(m.id)}">
+        <div class="bg-gray-900 rounded-lg overflow-hidden hover:ring-2 ring-blue-500 transition">
+          <img src="${m.poster}" class="h-48 w-full object-cover">
+          <div class="p-2">
+            <h3 class="text-sm font-semibold">${m.title}</h3>
+          </div>
+        </div>
+      </a>`;
+    });
 }
-</script>
-
-<!-- Security -->
-<script>
-/* Disable right click */
-document.addEventListener('contextmenu', e => e.preventDefault());
-
-/* Disable copy & selection */
-['copy','cut','paste'].forEach(ev =>
-  document.addEventListener(ev, e => e.preventDefault())
-);
-document.addEventListener('selectstart', e => e.preventDefault());
-
-/* Disable image drag */
-document.addEventListener('dragstart', e => {
-  if (e.target.tagName === 'IMG') e.preventDefault();
-});
-
-/* DevTools deterrent (not bulletproof) */
-setInterval(() => {
-  if (window.outerWidth - window.innerWidth > 160 ||
-      window.outerHeight - window.innerHeight > 160) {
-    document.body.innerHTML =
-      "<h1 style='color:white;text-align:center;margin-top:20%'>Access Blocked</h1>";
-  }
-}, 1000);
 </script>
 
 </body>
