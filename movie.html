@@ -1,69 +1,83 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Movie</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Movie | Doanin</title>
 <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-black text-white">
+<body class="bg-black text-white min-h-screen">
 
-<header class="p-4 bg-black/70 flex items-center">
- <a href="index.html" class="mr-4">←</a>
- <span class="text-blue-400 font-bold">Doanin</span>
+<header class="p-4 bg-black/80 flex items-center">
+  <a href="index.html" class="mr-4 text-xl">←</a>
+  <span class="text-blue-400 font-bold">Doanin</span>
 </header>
 
-<main class="p-4 max-w-4xl mx-auto" id="movie"></main>
+<main class="p-4 max-w-4xl mx-auto">
+  <div id="movie"></div>
+</main>
 
-<footer class="text-center text-gray-500 text-sm py-6">
+<footer class="text-center text-gray-500 text-xs py-6">
 © Doanin
 </footer>
 
 <script>
-const id=new URLSearchParams(location.search).get('id');
+const movieBox = document.getElementById('movie');
+const id = new URLSearchParams(window.location.search).get('id');
 
 fetch('data/movies/data.json')
-.then(r=>r.json())
-.then(d=>{
- const m=d.find(x=>x.id===id);
- let buttons='';
- Object.keys(m.qualities).forEach(q=>{
-  buttons+=`
-   <a href="${m.qualities[q]}" target="_blank"
-    class="px-4 py-2 bg-blue-700 rounded">${q}</a>`;
- });
- movie.innerHTML=`
-  <img src="${m.poster}" class="rounded w-full max-h-96 object-cover">
-  <h1 class="text-2xl font-bold mt-4">${m.title}</h1>
-  <p class="text-gray-400 mt-2">${m.description}</p>
-  <div class="flex gap-3 mt-6 flex-wrap">${buttons}</div>
- `;
-});
-</script>
-
-<!-- Security -->
-<script>
-/* Disable right click */
-document.addEventListener('contextmenu', e => e.preventDefault());
-
-/* Disable copy & selection */
-['copy','cut','paste'].forEach(ev =>
-  document.addEventListener(ev, e => e.preventDefault())
-);
-document.addEventListener('selectstart', e => e.preventDefault());
-
-/* Disable image drag */
-document.addEventListener('dragstart', e => {
-  if (e.target.tagName === 'IMG') e.preventDefault();
-});
-
-/* DevTools deterrent (not bulletproof) */
-setInterval(() => {
-  if (window.outerWidth - window.innerWidth > 160 ||
-      window.outerHeight - window.innerHeight > 160) {
-    document.body.innerHTML =
-      "<h1 style='color:white;text-align:center;margin-top:20%'>Access Blocked</h1>";
+.then(res => res.json())
+.then(data => {
+  const m = data.find(x => x.id === id);
+  if (!m) {
+    movieBox.innerHTML = "<p>Movie not found</p>";
+    return;
   }
-}, 1000);
+
+  let qualityBtns = '';
+  let downloadBtns = '';
+
+  Object.entries(m.qualities).forEach(([q, url]) => {
+    qualityBtns += `
+      <button onclick="watch('${url}')"
+        class="px-4 py-2 bg-blue-600 rounded text-sm">${q}</button>`;
+    downloadBtns += `
+      <a href="${url}" download
+        class="block px-4 py-2 hover:bg-blue-900">${q}</a>`;
+  });
+
+  movieBox.innerHTML = `
+    <img src="${m.poster}" class="rounded w-full max-h-96 object-cover">
+    <h1 class="text-2xl font-bold mt-4">${m.title}</h1>
+    <p class="text-gray-400 mt-2 text-sm">${m.description}</p>
+
+    <!-- WATCH -->
+    <h3 class="mt-6 mb-2 font-semibold">Watch</h3>
+    <div class="flex flex-wrap gap-3">${qualityBtns}</div>
+
+    <!-- DOWNLOAD DROPDOWN -->
+    <div class="relative mt-6">
+      <button onclick="toggleDownload()"
+       class="w-full bg-gray-900 border border-blue-700 p-3 rounded flex justify-between">
+       Download
+       <span>▼</span>
+      </button>
+      <div id="downloadMenu"
+       class="hidden absolute w-full bg-black border border-blue-700 rounded mt-1 z-20">
+       ${downloadBtns}
+      </div>
+    </div>
+  `;
+});
+
+function toggleDownload() {
+  document.getElementById('downloadMenu').classList.toggle('hidden');
+}
+
+function watch(url) {
+  window.open(url, '_blank');
+}
 </script>
 
 </body>
