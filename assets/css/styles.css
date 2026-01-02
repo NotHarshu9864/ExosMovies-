@@ -1,0 +1,17 @@
+/* Small custom utilities for consistent look */
+:root{
+  --accent: #0ea5e9;
+}
+
+/* Make images a little less bright on dark backgrounds */
+img {
+  filter: saturate(1.02) contrast(0.98);
+}
+
+/* Utility to clamp long titles */
+.clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
