@@ -2,17 +2,27 @@
   {
     "id": "m1",
     "title": "120 Bahadur",
+    "description": "A team of explorers travel through a wormhole in space.",
     "poster": "https://image.tmdb.org/t/p/w342/fdxf02vUous6fty6O4nollyuo4m.jpg",
-    "category": "Action",
-    "streamUrl": "https://example.com/stream/interstellar.m3u8",
-    "downloadUrl": "https://example.com/download/interstellar.mp4"
+    "category": "South",
+    "qualities": {
+      "240p": "https://example.com/240.mp4",
+      "360p": "https://example.com/360.mp4",
+      "480p": "https://example.com/480.mp4",
+      "720p": "https://example.com/720.m3u8"
+    }
   },
-  {
+ {
     "id": "m2",
     "title": "HAQ",
+    "description": "A team of explorers travel through a wormhole in space.",
     "poster": "https://catimages.org/images/2025/11/07/HAQ-2025-HDHub4u.Ms.jpg",
     "category": "Action",
-    "streamUrl": "https://example.com/stream/inception.m3u8",
-    "downloadUrl": "https://example.com/download/inception.mp4"
+    "qualities": {
+      "240p": "https://example.com/240.mp4",
+      "360p": "https://example.com/360.mp4",
+      "480p": "https://example.com/480.mp4",
+      "720p": "https://example.com/720.m3u8"
+    }
   }
 ]
