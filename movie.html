@@ -14,7 +14,7 @@
   <span class="text-blue-400 font-bold">Doanin</span>
 </header>
 
-<main class="p-4 max-w-4xl mx-auto">
+<main class="p-4 max-w-3xl mx-auto">
   <div id="movie"></div>
 </main>
 
@@ -24,59 +24,60 @@
 
 <script>
 const movieBox = document.getElementById('movie');
-const id = new URLSearchParams(window.location.search).get('id');
+const id = new URLSearchParams(location.search).get('id');
 
-fetch('data/movies/data.json')
-.then(res => res.json())
-.then(data => {
-  const m = data.find(x => x.id === id);
-  if (!m) {
-    movieBox.innerHTML = "<p>Movie not found</p>";
+loadMovies().then(data=>{
+  const m = data.find(x=>x.id===id);
+  if(!m){
+    movieBox.innerHTML="<p>Movie not found</p>";
     return;
   }
 
-  let qualityBtns = '';
-  let downloadBtns = '';
-
-  Object.entries(m.qualities).forEach(([q, url]) => {
-    qualityBtns += `
-      <button onclick="watch('${url}')"
-        class="px-4 py-2 bg-blue-600 rounded text-sm">${q}</button>`;
-    downloadBtns += `
+  let downloads="";
+  Object.entries(m.downloads).forEach(([q,url])=>{
+    downloads+=`
       <a href="${url}" download
-        class="block px-4 py-2 hover:bg-blue-900">${q}</a>`;
+       class="block px-4 py-3 hover:bg-blue-900 text-sm">${q}</a>`;
   });
 
-  movieBox.innerHTML = `
-    <img src="${m.poster}" class="rounded w-full max-h-96 object-cover">
+  movieBox.innerHTML=`
+    <img src="${m.poster}" class="rounded-xl w-full max-h-80 object-cover">
+    
     <h1 class="text-2xl font-bold mt-4">${m.title}</h1>
-    <p class="text-gray-400 mt-2 text-sm">${m.description}</p>
+    <p class="text-gray-400 mt-2 text-sm leading-relaxed">${m.description}</p>
 
-    <!-- WATCH -->
-    <h3 class="mt-6 mb-2 font-semibold">Watch</h3>
-    <div class="flex flex-wrap gap-3">${qualityBtns}</div>
+    <!-- WATCH BUTTON -->
+    <a href="${m.watchUrl}" target="_blank"
+     class="block mt-6 text-center bg-blue-600 py-3 rounded-lg font-semibold hover:bg-blue-700">
+     ▶ Watch Now
+    </a>
 
-    <!-- DOWNLOAD DROPDOWN -->
-    <div class="relative mt-6">
+    <!-- DOWNLOAD -->
+    <div class="relative mt-4">
       <button onclick="toggleDownload()"
-       class="w-full bg-gray-900 border border-blue-700 p-3 rounded flex justify-between">
+       class="w-full bg-gray-900 border border-blue-700 p-3 rounded-lg flex justify-between">
        Download
        <span>▼</span>
       </button>
       <div id="downloadMenu"
-       class="hidden absolute w-full bg-black border border-blue-700 rounded mt-1 z-20">
-       ${downloadBtns}
+       class="hidden absolute w-full bg-black border border-blue-700 rounded-lg mt-1">
+       ${downloads}
       </div>
     </div>
   `;
 });
 
-function toggleDownload() {
+function toggleDownload(){
   document.getElementById('downloadMenu').classList.toggle('hidden');
 }
+</script>
 
-function watch(url) {
-  window.open(url, '_blank');
+<!-- JSON LOADER -->
+<script>
+async function loadMovies() {
+  const res = await fetch('data/movies/data.enc');
+  const encrypted = await res.text();
+  return JSON.parse(atob(encrypted.trim()));
 }
 </script>
 
