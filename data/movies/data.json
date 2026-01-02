@@ -2,8 +2,8 @@
   "movies": [
     {
       "id": "m1",
-      "title": "Skyline Chase",
-      "poster": "https://images.unsplash.com/photo-1524985069026-dd778a71c7b4?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=abcd",
+      "title": "120 Bahadur",
+      "poster": "https://image.tmdb.org/t/p/w342/fdxf02vUous6fty6O4nollyuo4m.jpg",
       "download_url": "https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4",
       "stream_url": "https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4",
       "year": "2024",
@@ -12,8 +12,8 @@
     },
     {
       "id": "m2",
-      "title": "Midnight Waves",
-      "poster": "https://images.unsplash.com/photo-1507878866276-a947ef722fee?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=efgh",
+      "title": "HAQ",
+      "poster": "https://catimages.org/images/2025/11/07/HAQ-2025-HDHub4u.Ms.jpg",
       "download_url": "https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4",
       "stream_url": "https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4",
       "year": "2022",
