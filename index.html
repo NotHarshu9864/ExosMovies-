@@ -2,64 +2,91 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <title>Doanin</title>
+
 <script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+  /* Extra polish like QuickToppers */
+  body { -webkit-tap-highlight-color: transparent; }
+</style>
 </head>
 
-<body class="bg-black text-white min-h-screen">
+<body class="bg-gradient-to-b from-black via-slate-900 to-blue-950 text-white min-h-screen">
 
 <!-- HEADER -->
-<header class="fixed top-0 w-full z-50 bg-black/80 backdrop-blur flex items-center px-4 py-3">
-  <button onclick="toggleMenu()" class="text-2xl mr-4">☰</button>
-  <h1 class="text-lg font-bold text-blue-400">Doanin</h1>
+<header class="fixed top-0 w-full z-50 bg-black/80 backdrop-blur border-b border-blue-900">
+  <div class="flex items-center px-4 py-3">
+    <button onclick="toggleMenu()" class="text-2xl mr-4">☰</button>
+    <h1 class="text-lg font-bold text-blue-400 tracking-wide">Doanin</h1>
+  </div>
 </header>
 
 <!-- SIDEBAR -->
-<div id="menu" class="fixed inset-0 bg-black/95 hidden z-50 p-6">
-  <button onclick="toggleMenu()" class="text-xl mb-6">✕</button>
-  <a href="index.html" class="block py-3 text-lg">Home</a>
-  <a href="about.html" class="block py-3 text-lg">About</a>
-  <a href="#" class="block py-3 text-lg">Portfolio</a>
+<div id="menu" class="fixed inset-0 bg-black/95 hidden z-50">
+  <div class="p-6">
+    <button onclick="toggleMenu()" class="text-xl mb-6">✕</button>
+    <nav class="space-y-4 text-lg">
+      <a href="index.html" class="block hover:text-blue-400">Home</a>
+      <a href="about.html" class="block hover:text-blue-400">About</a>
+      <a href="#" class="block hover:text-blue-400">Portfolio</a>
+    </nav>
+  </div>
 </div>
 
 <!-- MAIN -->
 <main class="pt-20 px-3 max-w-7xl mx-auto">
 
-<!-- SEARCH -->
-<input id="search"
- class="w-full p-3 mb-4 rounded bg-gray-900 border border-blue-700 text-sm"
- placeholder="Search movies..." />
+  <!-- SEARCH -->
+  <input id="search"
+    class="w-full mb-4 p-3 rounded-lg bg-black/60 border border-blue-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
+    placeholder="Search movies..." />
 
-<!-- CATEGORY DROPDOWN -->
-<div class="relative mb-6">
-  <button onclick="toggleCat()"
-   class="w-full bg-gray-900 p-3 rounded border border-blue-700 flex justify-between items-center text-sm">
-   <span id="catText">All Categories</span>
-   <span>▼</span>
-  </button>
+  <!-- CATEGORY DROPDOWN -->
+  <div class="relative mb-6">
+    <button onclick="toggleCat()"
+      class="w-full bg-black/60 border border-blue-800 p-3 rounded-lg flex justify-between items-center text-sm">
+      <span id="catText">All Categories</span>
+      <span>▼</span>
+    </button>
 
-  <div id="catMenu"
-   class="absolute w-full bg-black border border-blue-700 rounded hidden z-30"></div>
-</div>
+    <div id="catMenu"
+      class="absolute w-full mt-1 bg-black border border-blue-800 rounded-lg hidden z-30 overflow-hidden">
+    </div>
+  </div>
 
-<!-- MOVIES GRID -->
-<div id="movies"
- class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"></div>
+  <!-- MOVIE GRID -->
+  <div id="movies"
+    class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+  </div>
 
 </main>
 
-<footer class="text-center py-6 text-gray-500 text-xs">
-© Doanin
+<!-- FOOTER -->
+<footer class="text-center py-6 text-gray-400 text-xs">
+© 2026 Doanin. All rights reserved.
 </footer>
 
+<!-- 🔐 ENCRYPTED JSON LOADER (REQUIRED) -->
+<script>
+async function loadMovies() {
+  const res = await fetch('data/movies/data.enc');
+  const encrypted = await res.text();
+  const decoded = atob(encrypted.trim());
+  return JSON.parse(decoded);
+}
+</script>
+
+<!-- MAIN LOGIC -->
 <script>
 const moviesDiv = document.getElementById('movies');
-const search = document.getElementById('search');
+const searchInput = document.getElementById('search');
 const catMenu = document.getElementById('catMenu');
 const catText = document.getElementById('catText');
 
-let movies = [], activeCat = "all";
+let movies = [];
+let activeCat = "all";
 
 function toggleMenu() {
   document.getElementById('menu').classList.toggle('hidden');
@@ -69,35 +96,41 @@ function toggleCat() {
   catMenu.classList.toggle('hidden');
 }
 
-fetch('data/movies/data.json')
-.then(res => res.json())
-.then(data => {
+/* LOAD MOVIES */
+loadMovies().then(data => {
   movies = data;
   renderCategories();
   renderMovies();
 });
 
+/* RENDER CATEGORIES */
 function renderCategories() {
   const cats = [...new Set(movies.map(m => m.category))];
-  catMenu.innerHTML =
-    `<div onclick="setCat('all')" class="p-3 hover:bg-blue-900">All</div>`;
+  catMenu.innerHTML = `
+    <div onclick="setCat('all')" class="px-4 py-3 hover:bg-blue-900 cursor-pointer">
+      All Categories
+    </div>`;
   cats.forEach(c => {
-    catMenu.innerHTML +=
-      `<div onclick="setCat('${c}')" class="p-3 hover:bg-blue-900">${c}</div>`;
+    catMenu.innerHTML += `
+      <div onclick="setCat('${c}')" class="px-4 py-3 hover:bg-blue-900 cursor-pointer">
+        ${c}
+      </div>`;
   });
 }
 
-function setCat(c) {
-  activeCat = c;
-  catText.textContent = c === "all" ? "All Categories" : c;
+function setCat(cat) {
+  activeCat = cat;
+  catText.textContent = cat === "all" ? "All Categories" : cat;
   catMenu.classList.add('hidden');
   renderMovies();
 }
 
-search.addEventListener('input', renderMovies);
+/* SEARCH */
+searchInput.addEventListener('input', renderMovies);
 
+/* RENDER MOVIES */
 function renderMovies() {
-  const q = search.value.toLowerCase();
+  const q = searchInput.value.toLowerCase();
   moviesDiv.innerHTML = "";
 
   movies
@@ -107,16 +140,26 @@ function renderMovies() {
     )
     .forEach(m => {
       moviesDiv.innerHTML += `
-      <a href="movie.html?id=${encodeURIComponent(m.id)}">
-        <div class="bg-gray-900 rounded-lg overflow-hidden hover:ring-2 ring-blue-500 transition">
-          <img src="${m.poster}" class="h-48 w-full object-cover">
-          <div class="p-2">
-            <h3 class="text-sm font-semibold">${m.title}</h3>
+        <a href="movie.html?id=${encodeURIComponent(m.id)}" class="group">
+          <div class="bg-black/60 rounded-xl overflow-hidden hover:ring-2 ring-blue-600 transition">
+            <img src="${m.poster}"
+              class="h-44 sm:h-48 w-full object-cover group-hover:scale-105 transition">
+            <div class="p-2">
+              <h3 class="text-sm font-semibold leading-tight group-hover:text-blue-400">
+                ${m.title}
+              </h3>
+            </div>
           </div>
-        </div>
-      </a>`;
+        </a>`;
     });
 }
+</script>
+
+<!-- BASIC PROTECTION -->
+<script>
+document.addEventListener('contextmenu', e => e.preventDefault());
+document.addEventListener('selectstart', e => e.preventDefault());
+document.addEventListener('dragstart', e => e.preventDefault());
 </script>
 
 </body>
