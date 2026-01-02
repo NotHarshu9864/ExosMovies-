@@ -1,44 +1,18 @@
-{
-  "movies": [
-    {
-      "id": "m1",
-      "title": "120 Bahadur",
-      "poster": "https://image.tmdb.org/t/p/w342/fdxf02vUous6fty6O4nollyuo4m.jpg",
-      "download_url": "https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4",
-      "stream_url": "https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4",
-      "year": "2024",
-      "runtime": "1h 34m",
-      "description": "A high-octane chase across neon skylines."
-    },
-    {
-      "id": "m2",
-      "title": "HAQ",
-      "poster": "https://catimages.org/images/2025/11/07/HAQ-2025-HDHub4u.Ms.jpg",
-      "download_url": "https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4",
-      "stream_url": "https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4",
-      "year": "2022",
-      "runtime": "1h 12m",
-      "description": "A mellow drama set by the sea at midnight."
-    },
-    {
-      "id": "m3",
-      "title": "Neon Frontier",
-      "poster": "https://images.unsplash.com/photo-1478720568477-152d9b164e26?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=ijkl",
-      "download_url": "https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4",
-      "stream_url": "https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4",
-      "year": "2025",
-      "runtime": "2h 03m",
-      "description": "Sci-fi exploration on the edge of a neon world."
-    },
-    {
-      "id": "m4",
-      "title": "Quiet Streets",
-      "poster": "https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=mnop",
-      "download_url": "https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4",
-      "stream_url": "https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4",
-      "year": "2023",
-      "runtime": "0h 46m",
-      "description": "A reflective story of small-town life."
-    }
-  ]
-}
+[
+  {
+    "id": "m1",
+    "title": "120 Bahadur",
+    "poster": "https://image.tmdb.org/t/p/w342/fdxf02vUous6fty6O4nollyuo4m.jpg",
+    "category": "Action",
+    "streamUrl": "https://example.com/stream/interstellar.m3u8",
+    "downloadUrl": "https://example.com/download/interstellar.mp4"
+  },
+  {
+    "id": "m2",
+    "title": "HAQ",
+    "poster": "https://catimages.org/images/2025/11/07/HAQ-2025-HDHub4u.Ms.jpg",
+    "category": "Action",
+    "streamUrl": "https://example.com/stream/inception.m3u8",
+    "downloadUrl": "https://example.com/download/inception.mp4"
+  }
+]
