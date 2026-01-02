@@ -1,49 +1,69 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Movie | Doanin</title>
+<title>Movie</title>
 <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-black text-white min-h-screen">
+<body class="bg-black text-white">
 
 <header class="p-4 bg-black/70 flex items-center">
-  <a href="index.html" class="text-xl mr-4">←</a>
-  <h1 class="text-lg font-bold text-blue-400">Doanin</h1>
+ <a href="index.html" class="mr-4">←</a>
+ <span class="text-blue-400 font-bold">Doanin</span>
 </header>
 
-<main class="p-6 max-w-5xl mx-auto">
-  <div id="movie"></div>
-</main>
+<main class="p-4 max-w-4xl mx-auto" id="movie"></main>
 
-<footer class="text-center text-gray-400 text-sm py-6">
-  Follow us:
-  <a href="#" class="mx-2 text-blue-400">Instagram</a>
-  <a href="#" class="mx-2 text-blue-400">Twitter</a>
-  <br>© Doanin
+<footer class="text-center text-gray-500 text-sm py-6">
+© Doanin
 </footer>
 
 <script>
-const id = new URLSearchParams(location.search).get('id');
+const id=new URLSearchParams(location.search).get('id');
 
 fetch('data/movies/data.json')
-  .then(res => res.json())
-  .then(data => {
-    const m = data.find(x => x.id === id);
-    if (!m) return;
-    movie.innerHTML = `
-      <img src="${m.poster}" class="w-full max-h-[400px] object-cover rounded">
-      <h2 class="text-3xl font-bold mt-4">${m.title}</h2>
+.then(r=>r.json())
+.then(d=>{
+ const m=d.find(x=>x.id===id);
+ let buttons='';
+ Object.keys(m.qualities).forEach(q=>{
+  buttons+=`
+   <a href="${m.qualities[q]}" target="_blank"
+    class="px-4 py-2 bg-blue-700 rounded">${q}</a>`;
+ });
+ movie.innerHTML=`
+  <img src="${m.poster}" class="rounded w-full max-h-96 object-cover">
+  <h1 class="text-2xl font-bold mt-4">${m.title}</h1>
+  <p class="text-gray-400 mt-2">${m.description}</p>
+  <div class="flex gap-3 mt-6 flex-wrap">${buttons}</div>
+ `;
+});
+</script>
 
-      <div class="flex gap-4 mt-6">
-        <a href="${m.streamUrl}" target="_blank"
-          class="px-6 py-3 bg-blue-600 rounded hover:bg-blue-700">▶ Stream</a>
+<!-- Security -->
+<script>
+/* Disable right click */
+document.addEventListener('contextmenu', e => e.preventDefault());
 
-        <a href="${m.downloadUrl}" download
-          class="px-6 py-3 bg-gray-800 rounded hover:bg-gray-700">⬇ Download</a>
-      </div>
-    `;
-  });
+/* Disable copy & selection */
+['copy','cut','paste'].forEach(ev =>
+  document.addEventListener(ev, e => e.preventDefault())
+);
+document.addEventListener('selectstart', e => e.preventDefault());
+
+/* Disable image drag */
+document.addEventListener('dragstart', e => {
+  if (e.target.tagName === 'IMG') e.preventDefault();
+});
+
+/* DevTools deterrent (not bulletproof) */
+setInterval(() => {
+  if (window.outerWidth - window.innerWidth > 160 ||
+      window.outerHeight - window.innerHeight > 160) {
+    document.body.innerHTML =
+      "<h1 style='color:white;text-align:center;margin-top:20%'>Access Blocked</h1>";
+  }
+}, 1000);
 </script>
 
 </body>
