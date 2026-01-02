@@ -1,17 +1,27 @@
-/* Small custom utilities for consistent look */
+/* Custom small utilities for NovaStream production-style UI */
 :root{
-  --accent: #0ea5e9;
+  --accent: #08aeea;
+  --bg: #041426;
+  --card: rgba(255,255,255,0.02);
 }
 
-/* Make images a little less bright on dark backgrounds */
-img {
-  filter: saturate(1.02) contrast(0.98);
-}
+/* Reduce image brightness slightly for dark theme */
+img { filter: saturate(1.02) contrast(0.98); }
 
-/* Utility to clamp long titles */
-.clamp-2 {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
+/* Truncate titles */
+.clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+/* Focus ring for keyboard users */
+:focus { outline: none; }
+
+/* Smooth transitions */
+* { transition: background-color 180ms ease, color 180ms ease, transform 180ms ease; }
+
+/* Utility for subtle glass layer */
+.glass { background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border: 1px solid rgba(255,255,255,0.03); }
+
+/* Responsive image cover */
+.poster-cover { object-fit: cover; object-position: center; }
+
+/* Make anchor cards accessible */
+.movie-card:focus { box-shadow: 0 0 0 3px rgba(8,174,234,0.18); transform: translateY(-2px); }
