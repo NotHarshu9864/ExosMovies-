@@ -1,96 +1,149 @@
-<!DOCTYPE html><html lang="en">
+<!doctype html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ExosMovies – Watch Movies Online</title>  <!-- SEO -->  <meta name="description" content="ExosMovies – Stream Hollywood, Bollywood and South Hindi movies online in HD." />
-  <meta name="keywords" content="ExosMovies, movies online, hollywood, bollywood, south hindi" />  <script src="https://cdn.tailwindcss.com"></script>  <script>
-    tailwind.config = {
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>NovaStream — Home</title>
+  <meta name="description" content="NovaStream — modern dark video streaming & downloading demo" />
+  <script>
+    // Tailwind CDN config: extend if needed
+    tailwindConfig = {
       theme: {
         extend: {
-          colors: { neon: '#00f6ff' }
+          colors: {
+            'navy-900': '#031224',
+            'navy-800': '#071126',
+            'accent-blue': '#0ea5e9',
+            'glass': 'rgba(255,255,255,0.03)'
+          }
         }
       }
     }
-  </script></head>
-<body class="bg-black text-white overflow-x-hidden"><!-- ================= HEADER ================= --><header class="sticky top-0 z-40 flex items-center justify-between px-4 py-3 bg-black/80 backdrop-blur border-b border-gray-800">
-  <button id="menuBtn" class="md:hidden text-neon text-2xl">☰</button>
-  <h1 class="absolute left-1/2 -translate-x-1/2 text-xl font-bold text-neon tracking-widest">ExosMovies</h1>
-  <input id="searchDesktop" type="text" placeholder="Search" class="hidden md:block w-1/3 px-3 py-1.5 rounded bg-gray-900 border border-gray-700 focus:border-neon outline-none" />
-</header><div class="flex"><!-- ================= SIDEBAR ================= --><aside id="sidebar" class="fixed md:static inset-y-0 left-0 w-64 bg-black border-r border-gray-800 p-4 transform -translate-x-full md:translate-x-0 transition z-50">
-  <h2 class="text-lg font-semibold text-gray-300 mb-4">Categories</h2>
-  <nav class="space-y-2">
-    <a href="index.html" class="block px-3 py-2 rounded hover:bg-gray-800">All</a>
-    <a href="index.html?type=hollywood" class="block px-3 py-2 rounded hover:bg-gray-800">Hollywood</a>
-    <a href="index.html?type=bollywood" class="block px-3 py-2 rounded hover:bg-gray-800">Bollywood</a>
-    <a href="index.html?type=south" class="block px-3 py-2 rounded hover:bg-gray-800">South (Hindi)</a>
-  </nav>
-</aside><div id="overlay" class="fixed inset-0 bg-black/70 hidden z-40"></div><!-- ================= MAIN ================= --><main class="flex-1 p-4 md:p-6">  <!-- Mobile Search -->  <input id="searchMobile" type="text" placeholder="Search movies..." class="md:hidden w-full mb-4 px-4 py-2 rounded bg-gray-900 border border-gray-700 focus:border-neon outline-none" />  <!-- Skeleton Loader -->  <div id="skeleton" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-    <div class="animate-pulse"><div class="h-56 bg-gray-800 rounded-xl"></div><div class="h-4 bg-gray-700 rounded mt-3 w-3/4"></div></div>
-    <div class="animate-pulse"><div class="h-56 bg-gray-800 rounded-xl"></div><div class="h-4 bg-gray-700 rounded mt-3 w-3/4"></div></div>
-    <div class="animate-pulse"><div class="h-56 bg-gray-800 rounded-xl"></div><div class="h-4 bg-gray-700 rounded mt-3 w-3/4"></div></div>
-    <div class="animate-pulse"><div class="h-56 bg-gray-800 rounded-xl"></div><div class="h-4 bg-gray-700 rounded mt-3 w-3/4"></div></div>
-  </div>  <!-- Movies Grid -->  <div id="moviesGrid" class="hidden grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4"></div>
-</main></div><script>
-/* ================= SIDEBAR ================= */
-const sidebar = document.getElementById('sidebar');
-const overlay = document.getElementById('overlay');
-const menuBtn = document.getElementById('menuBtn');
-
-menuBtn.onclick = () => {
-  sidebar.classList.remove('-translate-x-full');
-  overlay.classList.remove('hidden');
-};
-
-overlay.onclick = () => {
-  sidebar.classList.add('-translate-x-full');
-  overlay.classList.add('hidden');
-};
-
-/* ================= MOVIES ================= */
-const grid = document.getElementById('moviesGrid');
-const skeleton = document.getElementById('skeleton');
-const searchDesktop = document.getElementById('searchDesktop');
-const searchMobile = document.getElementById('searchMobile');
-
-let allMovies = [];
-const params = new URLSearchParams(window.location.search);
-const typeFilter = params.get('type');
-
-fetch('data/movies.json')
-  .then(r => r.json())
-  .then(data => {
-    allMovies = data.movies || [];
-    skeleton.classList.add('hidden');
-    grid.classList.remove('hidden');
-    renderMovies();
-  })
-  .catch(() => {
-    skeleton.innerHTML = '<p class="text-red-400">Failed to load movies.json</p>';
-  });
-
-function renderMovies() {
-  grid.innerHTML = '';
-  let list = allMovies;
-
-  if (typeFilter) list = list.filter(m => m.type === typeFilter);
-
-  const q = (searchDesktop.value || searchMobile.value || '').toLowerCase();
-  if (q) list = list.filter(m => m.title.toLowerCase().includes(q));
-
-  list.forEach(movie => {
-    const div = document.createElement('div');
-    div.innerHTML = `
-      <a href="player.html?id=${movie.id}" class="block group">
-        <div class="overflow-hidden rounded-xl border border-gray-800">
-          <img src="${movie.thumbnail}" alt="${movie.title}" class="w-full h-56 object-cover group-hover:scale-110 transition" />
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body class="min-h-screen bg-gradient-to-b from-navy-900 via-black to-black text-slate-200 antialiased">
+  <!-- Header -->
+  <header class="sticky top-0 z-40 backdrop-blur-sm bg-[rgba(2,6,23,0.55)] border-b border-slate-800">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center space-x-3">
+          <!-- Hamburger -->
+          <button id="hamburgerBtn" aria-label="Menu" class="p-2 rounded-md hover:bg-[rgba(255,255,255,0.03)] transition">
+            <svg class="w-6 h-6 text-sky-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+          </button>
+          <!-- Site Title -->
+          <a href="index.html" class="flex items-center gap-2">
+            <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-accent-blue/60 to-sky-700 flex items-center justify-center shadow-md">
+              <svg class="w-6 h-6 text-black" viewBox="0 0 24 24" fill="none">
+                <path d="M3 12 L21 4 L21 20 Z" fill="black" opacity="0.95"/>
+              </svg>
+            </div>
+            <div class="text-lg font-semibold tracking-tight">NovaStream</div>
+          </a>
         </div>
-        <h3 class="mt-2 text-sm font-semibold truncate">${movie.title}</h3>
-      </a>`;
-    grid.appendChild(div);
-  });
-}
 
-searchDesktop.addEventListener('input', renderMovies);
-searchMobile.addEventListener('input', renderMovies);
-</script></body>
+        <!-- Right (optional controls) -->
+        <nav class="hidden md:flex items-center space-x-4">
+          <a class="text-slate-300 hover:text-white transition" href="index.html">Home</a>
+          <a class="text-slate-300 hover:text-white transition" href="about.html">About</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Side Drawer (Hamburger menu) -->
+  <aside id="drawer" class="fixed left-0 top-0 h-full w-64 transform -translate-x-full transition-transform duration-200 z-50">
+    <div class="h-full bg-gradient-to-b from-navy-800 via-black to-black border-r border-slate-800 p-6">
+      <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded bg-accent-blue flex items-center justify-center"><span class="text-black font-bold">N</span></div>
+          <div>
+            <div class="font-semibold">NovaStream</div>
+            <div class="text-xs text-slate-400">Stream & Download</div>
+          </div>
+        </div>
+        <button id="drawerClose" class="p-1 rounded text-slate-400 hover:text-white">
+          ✕
+        </button>
+      </div>
+      <nav class="flex flex-col gap-3">
+        <a href="index.html" class="px-3 py-2 rounded hover:bg-[rgba(255,255,255,0.02)]">Home</a>
+        <a href="about.html" class="px-3 py-2 rounded hover:bg-[rgba(255,255,255,0.02)]">About</a>
+        <a href="#" class="px-3 py-2 rounded hover:bg-[rgba(255,255,255,0.02)]">Portfolio</a>
+      </nav>
+
+      <div class="mt-6 text-sm text-slate-400">
+        <p>Connect</p>
+        <div class="flex gap-3 mt-3">
+          <a href="#" aria-label="Twitter" class="text-sky-400">Twitter</a>
+          <a href="#" aria-label="Github" class="text-slate-300">GitHub</a>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <section class="mb-8">
+      <div class="flex items-center justify-between">
+        <h1 class="text-3xl font-bold">Trending Movies</h1>
+        <div class="text-slate-400">Dark blue & black UI</div>
+      </div>
+      <p class="text-slate-400 mt-2">Click any poster to view details, stream or download.</p>
+    </section>
+
+    <!-- Grid -->
+    <section>
+      <div id="moviesGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6"></div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800 mt-12 py-6">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+      <div class="text-sm text-slate-400">© <span id="year"></span> NovaStream. All rights reserved.</div>
+      <div class="text-sm text-slate-400">Made with ♥</div>
+    </div>
+  </footer>
+
+  <script src="assets/js/app.js"></script>
+  <script>
+    // Populate grid using fetched JSON
+    (async function loadMovies(){
+      try{
+        const res = await fetch('data/movies/data.json');
+        const raw = await res.json();
+        const movies = raw.movies || [];
+        const grid = document.getElementById('moviesGrid');
+
+        if (!movies.length) {
+          grid.innerHTML = '<div class="text-slate-400">No movies found in data/movies/data.json</div>';
+          return;
+        }
+
+        grid.innerHTML = movies.map(m => `
+          <a href="movie.html?id=${encodeURIComponent(m.id)}" class="group block rounded-lg overflow-hidden shadow-lg transform hover:scale-[1.02] transition">
+            <div class="relative pb-[56%] bg-slate-900">
+              <img src="${m.poster}" alt="${escapeHtml(m.title)} poster" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform" />
+              <div class="absolute left-2 top-2 bg-[rgba(0,0,0,0.45)] text-xs px-2 py-1 rounded text-slate-200">${m.year || ''}</div>
+            </div>
+            <div class="px-3 py-2 bg-gradient-to-t from-black to-transparent">
+              <div class="flex items-center justify-between">
+                <h3 class="text-sm font-semibold">${escapeHtml(m.title)}</h3>
+                <div class="text-xs text-slate-400">${m.runtime || ''}</div>
+              </div>
+            </div>
+          </a>
+        `).join('');
+      }catch(e){
+        console.error(e);
+        document.getElementById('moviesGrid').innerHTML = '<div class="text-red-400">Failed to load movies.</div>';
+      }
+    })();
+  </script>
+</body>
 </html>
