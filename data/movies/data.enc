@@ -1,0 +1,28 @@
+[
+  {
+    "id": "m1",
+    "title": "120 Bahadur",
+    "description": "A team of explorers travel through a wormhole in space.",
+    "poster": "https://image.tmdb.org/t/p/w342/fdxf02vUous6fty6O4nollyuo4m.jpg",
+    "category": "Sci-Fi",
+    "watchUrl": "https://example.com/watch/interstellar",
+    "downloads": {
+      "240p": "https://example.com/240.mp4",
+      "360p": "https://example.com/360.mp4",
+      "480p": "https://example.com/480.mp4"
+    }
+  },
+  {
+    "id": "m2",
+    "title": "HAQ",
+    "description": "A team of explorers travel through a wormhole in space.",
+    "poster": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzG2us0RJR7s192OpdtA-inlyEcVsB_55F335fx2Cj8A&s=10",
+    "category": "Action",
+    "watchUrl": "https://example.com/watch/interstellar",
+    "downloads": {
+      "240p": "https://example.com/240.mp4",
+      "360p": "https://example.com/360.mp4",
+      "480p": "https://example.com/480.mp4"
+    }
+  }
+]
