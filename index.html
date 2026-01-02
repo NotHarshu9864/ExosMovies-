@@ -1,107 +1,131 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<title>Doanin | Home</title>
+<title>Doanin</title>
 <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-gradient-to-br from-black via-slate-900 to-blue-950 text-white min-h-screen">
+<body class="bg-black text-white min-h-screen">
 
-<!-- Header -->
-<header class="flex items-center justify-between p-4 bg-black/60 backdrop-blur fixed w-full z-50">
-  <button onclick="toggleMenu()" class="text-2xl">☰</button>
-  <h1 class="text-xl font-bold text-blue-400">Doanin</h1>
+<header class="fixed top-0 w-full z-50 bg-black/70 backdrop-blur flex items-center p-4">
+  <button onclick="toggleMenu()" class="text-2xl mr-4">☰</button>
+  <h1 class="text-lg font-bold text-blue-400">Doanin</h1>
 </header>
 
 <!-- Sidebar -->
-<div id="menu" class="fixed top-0 left-0 w-64 h-full bg-black/90 p-6 hidden z-50">
-  <button onclick="toggleMenu()" class="mb-6 text-xl">✕</button>
-  <nav class="space-y-4 text-lg">
-    <a href="index.html" class="block hover:text-blue-400">Home</a>
-    <a href="about.html" class="block hover:text-blue-400">About</a>
-    <a href="#" class="block hover:text-blue-400">Portfolio</a>
-  </nav>
+<div id="menu" class="fixed inset-0 bg-black/90 hidden z-50 p-6">
+  <button onclick="toggleMenu()" class="text-xl mb-6">✕</button>
+  <a class="block py-2 text-lg" href="index.html">Home</a>
+  <a class="block py-2 text-lg" href="about.html">About</a>
+  <a class="block py-2 text-lg" href="#">Portfolio</a>
 </div>
 
-<!-- Main -->
-<main class="pt-24 px-6 max-w-7xl mx-auto">
+<main class="pt-20 px-4 max-w-7xl mx-auto">
 
-<!-- Search & Filter -->
-<div class="flex flex-col md:flex-row gap-4 mb-6">
-  <input id="search" placeholder="Search movies..."
-    class="w-full md:w-1/2 px-4 py-2 rounded bg-black border border-blue-800 focus:outline-none">
-  
-  <select id="category"
-    class="px-4 py-2 rounded bg-black border border-blue-800">
-    <option value="all">All Categories</option>
-  </select>
+<!-- Search -->
+<input id="search"
+ class="w-full p-3 mb-4 rounded bg-gray-900 border border-blue-700"
+ placeholder="Search movies..." />
+
+<!-- Custom Dropdown -->
+<div class="relative mb-6">
+  <button onclick="toggleCat()"
+   class="w-full bg-gray-900 p-3 rounded border border-blue-700 flex justify-between">
+   <span id="catText">All Categories</span> ▼
+  </button>
+
+  <div id="catMenu"
+   class="absolute w-full bg-black border border-blue-700 rounded hidden z-20"></div>
 </div>
 
-<!-- Movies Grid -->
-<div id="movies" class="grid grid-cols-2 md:grid-cols-4 gap-6"></div>
+<!-- Grid -->
+<div id="movies"
+ class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"></div>
 
 </main>
 
-<!-- Footer -->
-<footer class="text-center py-6 mt-12 text-sm text-gray-400">
-  © 2026 Doanin. All rights reserved.
+<footer class="text-center py-6 text-gray-500 text-sm">
+© Doanin
 </footer>
 
 <script>
-let allMovies = [];
+let movies=[], activeCat="all";
 
-function toggleMenu() {
-  document.getElementById('menu').classList.toggle('hidden');
-}
+function toggleMenu(){ menu.classList.toggle('hidden'); }
+function toggleCat(){ catMenu.classList.toggle('hidden'); }
 
 fetch('data/movies/data.json')
-  .then(res => res.json())
-  .then(data => {
-    allMovies = data;
-    populateCategories(data);
-    renderMovies(data);
-  });
+.then(r=>r.json())
+.then(d=>{
+ movies=d;
+ renderCategories();
+ render();
+});
 
-function populateCategories(data) {
-  const select = document.getElementById('category');
-  [...new Set(data.map(m => m.category))].forEach(cat => {
-    const opt = document.createElement('option');
-    opt.value = cat;
-    opt.textContent = cat;
-    select.appendChild(opt);
-  });
+function renderCategories(){
+ const cats=[...new Set(movies.map(m=>m.category))];
+ catMenu.innerHTML='<div onclick="setCat(\'all\')" class="p-3 hover:bg-blue-900">All</div>';
+ cats.forEach(c=>{
+  catMenu.innerHTML+=
+   `<div onclick="setCat('${c}')" class="p-3 hover:bg-blue-900">${c}</div>`;
+ });
 }
 
-function renderMovies(data) {
-  const container = document.getElementById('movies');
-  container.innerHTML = '';
-  data.forEach(m => {
-    container.innerHTML += `
-      <a href="movie.html?id=${m.id}" class="group">
-        <div class="bg-black/60 rounded-lg overflow-hidden hover:scale-105 transition">
-          <img src="${m.poster}" class="w-full h-56 object-cover">
-          <div class="p-3">
-            <h3 class="font-semibold group-hover:text-blue-400">${m.title}</h3>
-            <p class="text-sm text-gray-400">${m.category}</p>
-          </div>
-        </div>
-      </a>
-    `;
-  });
+function setCat(c){
+ activeCat=c;
+ catText.innerText=c==="all"?"All Categories":c;
+ catMenu.classList.add('hidden');
+ render();
 }
 
-document.getElementById('search').addEventListener('input', filter);
-document.getElementById('category').addEventListener('change', filter);
+search.oninput=render;
 
-function filter() {
-  const q = search.value.toLowerCase();
-  const c = category.value;
-  renderMovies(allMovies.filter(m =>
-    m.title.toLowerCase().includes(q) &&
-    (c === 'all' || m.category === c)
-  ));
+function render(){
+ const q=search.value.toLowerCase();
+ moviesDiv.innerHTML='';
+ movies.filter(m=>
+  m.title.toLowerCase().includes(q) &&
+  (activeCat==="all"||m.category===activeCat)
+ ).forEach(m=>{
+  moviesDiv.innerHTML+=`
+   <a href="movie.html?id=${m.id}">
+    <div class="bg-gray-900 rounded-lg overflow-hidden hover:ring-2 ring-blue-500 transition">
+     <img src="${m.poster}" class="h-48 w-full object-cover">
+     <div class="p-3">
+      <h3 class="text-sm font-semibold">${m.title}</h3>
+     </div>
+    </div>
+   </a>`;
+ });
 }
 </script>
+
+<!-- Security -->
+<script>
+/* Disable right click */
+document.addEventListener('contextmenu', e => e.preventDefault());
+
+/* Disable copy & selection */
+['copy','cut','paste'].forEach(ev =>
+  document.addEventListener(ev, e => e.preventDefault())
+);
+document.addEventListener('selectstart', e => e.preventDefault());
+
+/* Disable image drag */
+document.addEventListener('dragstart', e => {
+  if (e.target.tagName === 'IMG') e.preventDefault();
+});
+
+/* DevTools deterrent (not bulletproof) */
+setInterval(() => {
+  if (window.outerWidth - window.innerWidth > 160 ||
+      window.outerHeight - window.innerHeight > 160) {
+    document.body.innerHTML =
+      "<h1 style='color:white;text-align:center;margin-top:20%'>Access Blocked</h1>";
+  }
+}, 1000);
+</script>
+
 </body>
 </html>
