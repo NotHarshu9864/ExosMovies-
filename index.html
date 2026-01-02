@@ -5,16 +5,17 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>NovaStream — Home</title>
   <meta name="description" content="NovaStream — modern dark video streaming & downloading demo" />
+  <meta name="theme-color" content="#041426" />
   <script>
-    // Tailwind CDN config: extend if needed
+    // Tailwind CDN config (colors)
     tailwindConfig = {
       theme: {
         extend: {
           colors: {
-            'navy-900': '#031224',
-            'navy-800': '#071126',
-            'accent-blue': '#0ea5e9',
-            'glass': 'rgba(255,255,255,0.03)'
+            'navy-900': '#041426',
+            'navy-800': '#071427',
+            'accent-blue': '#08aeea',
+            'accent-deep': '#0b4f6c'
           }
         }
       }
@@ -25,20 +26,20 @@
 </head>
 <body class="min-h-screen bg-gradient-to-b from-navy-900 via-black to-black text-slate-200 antialiased">
   <!-- Header -->
-  <header class="sticky top-0 z-40 backdrop-blur-sm bg-[rgba(2,6,23,0.55)] border-b border-slate-800">
+  <header class="sticky top-0 z-40 backdrop-blur bg-[rgba(2,6,23,0.55)] border-b border-slate-800">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16">
-        <div class="flex items-center space-x-3">
-          <!-- Hamburger -->
-          <button id="hamburgerBtn" aria-label="Menu" class="p-2 rounded-md hover:bg-[rgba(255,255,255,0.03)] transition">
-            <svg class="w-6 h-6 text-sky-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="flex items-center gap-3">
+          <button id="hamburgerBtn" aria-label="Open menu"
+                  class="p-2 rounded-md hover:bg-[rgba(255,255,255,0.03)] transition focus:outline-none focus:ring-2 focus:ring-accent-blue">
+            <svg class="w-6 h-6 text-accent-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
             </svg>
           </button>
-          <!-- Site Title -->
-          <a href="index.html" class="flex items-center gap-2">
-            <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-accent-blue/60 to-sky-700 flex items-center justify-center shadow-md">
-              <svg class="w-6 h-6 text-black" viewBox="0 0 24 24" fill="none">
+
+          <a href="index.html" class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-accent-blue to-accent-deep flex items-center justify-center shadow-md">
+              <svg class="w-6 h-6 text-black" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <path d="M3 12 L21 4 L21 20 Z" fill="black" opacity="0.95"/>
               </svg>
             </div>
@@ -46,18 +47,28 @@
           </a>
         </div>
 
-        <!-- Right (optional controls) -->
-        <nav class="hidden md:flex items-center space-x-4">
-          <a class="text-slate-300 hover:text-white transition" href="index.html">Home</a>
-          <a class="text-slate-300 hover:text-white transition" href="about.html">About</a>
+        <div class="flex-1 px-4 hidden sm:flex items-center">
+          <label for="search" class="sr-only">Search movies</label>
+          <div class="relative w-full max-w-xl">
+            <input id="search" type="search" placeholder="Search title, year or runtime..." autocomplete="off"
+                   class="w-full py-2 pl-10 pr-4 rounded-md bg-[rgba(255,255,255,0.02)] placeholder:text-slate-400 text-slate-100 focus:outline-none focus:ring-2 focus:ring-accent-blue" />
+            <svg class="w-5 h-5 absolute left-3 top-2.5 text-slate-400" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z"/>
+            </svg>
+          </div>
+        </div>
+
+        <nav class="hidden sm:flex items-center gap-4">
+          <a href="index.html" class="text-slate-300 hover:text-white transition">Home</a>
+          <a href="about.html" class="text-slate-300 hover:text-white transition">About</a>
         </nav>
       </div>
     </div>
   </header>
 
-  <!-- Side Drawer (Hamburger menu) -->
-  <aside id="drawer" class="fixed left-0 top-0 h-full w-64 transform -translate-x-full transition-transform duration-200 z-50">
-    <div class="h-full bg-gradient-to-b from-navy-800 via-black to-black border-r border-slate-800 p-6">
+  <!-- Side Drawer -->
+  <aside id="drawer" class="fixed left-0 top-0 h-full w-72 transform -translate-x-full transition-transform duration-200 z-50">
+    <div class="h-full bg-gradient-to-b from-navy-800 via-black to-black border-r border-slate-800 p-6 flex flex-col">
       <div class="flex items-center justify-between mb-6">
         <div class="flex items-center gap-3">
           <div class="w-10 h-10 rounded bg-accent-blue flex items-center justify-center"><span class="text-black font-bold">N</span></div>
@@ -66,21 +77,20 @@
             <div class="text-xs text-slate-400">Stream & Download</div>
           </div>
         </div>
-        <button id="drawerClose" class="p-1 rounded text-slate-400 hover:text-white">
-          ✕
-        </button>
+        <button id="drawerClose" class="p-1 rounded text-slate-400 hover:text-white">✕</button>
       </div>
-      <nav class="flex flex-col gap-3">
+
+      <nav class="flex flex-col gap-2 mb-6">
         <a href="index.html" class="px-3 py-2 rounded hover:bg-[rgba(255,255,255,0.02)]">Home</a>
         <a href="about.html" class="px-3 py-2 rounded hover:bg-[rgba(255,255,255,0.02)]">About</a>
         <a href="#" class="px-3 py-2 rounded hover:bg-[rgba(255,255,255,0.02)]">Portfolio</a>
       </nav>
 
-      <div class="mt-6 text-sm text-slate-400">
-        <p>Connect</p>
-        <div class="flex gap-3 mt-3">
+      <div class="mt-auto text-sm text-slate-400">
+        <p class="mb-2">Connect</p>
+        <div class="flex gap-3">
           <a href="#" aria-label="Twitter" class="text-sky-400">Twitter</a>
-          <a href="#" aria-label="Github" class="text-slate-300">GitHub</a>
+          <a href="#" aria-label="GitHub" class="text-slate-300">GitHub</a>
         </div>
       </div>
     </div>
@@ -88,17 +98,27 @@
 
   <!-- Main -->
   <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-    <section class="mb-8">
+    <section class="mb-6">
       <div class="flex items-center justify-between">
-        <h1 class="text-3xl font-bold">Trending Movies</h1>
-        <div class="text-slate-400">Dark blue & black UI</div>
+        <div>
+          <h1 class="text-3xl font-bold">Latest Movies</h1>
+          <p class="text-slate-400 mt-1">Browse, stream or download — data loaded from <code class="bg-[rgba(255,255,255,0.02)] px-1 rounded">data/movies/data.json</code></p>
+        </div>
+        <div class="sm:hidden">
+          <!-- small-screen search icon opens a modal search (simple behavior handled in JS) -->
+          <button id="mobileSearchBtn" aria-label="Search" class="p-2 rounded-md hover:bg-[rgba(255,255,255,0.03)]">
+            <svg class="w-5 h-5 text-slate-300" viewBox="0 0 24 24" fill="none">
+              <path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z"/>
+            </svg>
+          </button>
+        </div>
       </div>
-      <p class="text-slate-400 mt-2">Click any poster to view details, stream or download.</p>
     </section>
 
-    <!-- Grid -->
+    <!-- Grid & Search results -->
     <section>
       <div id="moviesGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6"></div>
+      <div id="noResults" class="hidden mt-6 text-center text-slate-400">No movies match your search.</div>
     </section>
   </main>
 
@@ -111,39 +131,5 @@
   </footer>
 
   <script src="assets/js/app.js"></script>
-  <script>
-    // Populate grid using fetched JSON
-    (async function loadMovies(){
-      try{
-        const res = await fetch('data/movies/data.json');
-        const raw = await res.json();
-        const movies = raw.movies || [];
-        const grid = document.getElementById('moviesGrid');
-
-        if (!movies.length) {
-          grid.innerHTML = '<div class="text-slate-400">No movies found in data/movies/data.json</div>';
-          return;
-        }
-
-        grid.innerHTML = movies.map(m => `
-          <a href="movie.html?id=${encodeURIComponent(m.id)}" class="group block rounded-lg overflow-hidden shadow-lg transform hover:scale-[1.02] transition">
-            <div class="relative pb-[56%] bg-slate-900">
-              <img src="${m.poster}" alt="${escapeHtml(m.title)} poster" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform" />
-              <div class="absolute left-2 top-2 bg-[rgba(0,0,0,0.45)] text-xs px-2 py-1 rounded text-slate-200">${m.year || ''}</div>
-            </div>
-            <div class="px-3 py-2 bg-gradient-to-t from-black to-transparent">
-              <div class="flex items-center justify-between">
-                <h3 class="text-sm font-semibold">${escapeHtml(m.title)}</h3>
-                <div class="text-xs text-slate-400">${m.runtime || ''}</div>
-              </div>
-            </div>
-          </a>
-        `).join('');
-      }catch(e){
-        console.error(e);
-        document.getElementById('moviesGrid').innerHTML = '<div class="text-red-400">Failed to load movies.</div>';
-      }
-    })();
-  </script>
 </body>
 </html>
