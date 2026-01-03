@@ -2,24 +2,23 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>Doanin</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Doanin • Movies</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
-  /* Extra polish like QuickToppers */
   body { -webkit-tap-highlight-color: transparent; }
 </style>
 </head>
 
-<body class="bg-gradient-to-b from-black via-slate-900 to-blue-950 text-white min-h-screen">
+<body class="bg-gradient-to-br from-black via-slate-900 to-blue-950 text-white min-h-screen">
 
 <!-- HEADER -->
 <header class="fixed top-0 w-full z-50 bg-black/80 backdrop-blur border-b border-blue-900">
   <div class="flex items-center px-4 py-3">
     <button onclick="toggleMenu()" class="text-2xl mr-4">☰</button>
-    <h1 class="text-lg font-bold text-blue-400 tracking-wide">Doanin</h1>
+    <h1 class="text-lg font-extrabold tracking-wide text-blue-400">DOANIN</h1>
   </div>
 </header>
 
@@ -36,23 +35,23 @@
 </div>
 
 <!-- MAIN -->
-<main class="pt-20 px-3 max-w-7xl mx-auto">
+<main class="pt-20 px-4 max-w-7xl mx-auto">
 
   <!-- SEARCH -->
   <input id="search"
-    class="w-full mb-4 p-3 rounded-lg bg-black/60 border border-blue-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
+    class="w-full mb-4 p-3 rounded-xl bg-black/60 border border-blue-800 focus:ring-2 focus:ring-blue-600 outline-none text-sm"
     placeholder="Search movies..." />
 
   <!-- CATEGORY DROPDOWN -->
   <div class="relative mb-6">
     <button onclick="toggleCat()"
-      class="w-full bg-black/60 border border-blue-800 p-3 rounded-lg flex justify-between items-center text-sm">
+      class="w-full bg-black/60 border border-blue-800 p-3 rounded-xl flex justify-between items-center text-sm">
       <span id="catText">All Categories</span>
       <span>▼</span>
     </button>
 
     <div id="catMenu"
-      class="absolute w-full mt-1 bg-black border border-blue-800 rounded-lg hidden z-30 overflow-hidden">
+      class="absolute w-full mt-1 bg-black border border-blue-800 rounded-xl hidden z-30 overflow-hidden">
     </div>
   </div>
 
@@ -63,22 +62,10 @@
 
 </main>
 
-<!-- FOOTER -->
 <footer class="text-center py-6 text-gray-400 text-xs">
 © 2026 Doanin. All rights reserved.
 </footer>
 
-<!-- 🔐 ENCRYPTED JSON LOADER (REQUIRED) -->
-<script>
-async function loadMovies() {
-  const res = await fetch('data/movies/data.enc');
-  const encrypted = await res.text();
-  const decoded = atob(encrypted.trim());
-  return JSON.parse(decoded);
-}
-</script>
-
-<!-- MAIN LOGIC -->
 <script>
 const moviesDiv = document.getElementById('movies');
 const searchInput = document.getElementById('search');
@@ -96,18 +83,18 @@ function toggleCat() {
   catMenu.classList.toggle('hidden');
 }
 
-/* LOAD MOVIES */
-loadMovies().then(data => {
+fetch('data/movies/data.json')
+.then(res => res.json())
+.then(data => {
   movies = data;
   renderCategories();
   renderMovies();
 });
 
-/* RENDER CATEGORIES */
 function renderCategories() {
   const cats = [...new Set(movies.map(m => m.category))];
-  catMenu.innerHTML = `
-    <div onclick="setCat('all')" class="px-4 py-3 hover:bg-blue-900 cursor-pointer">
+  catMenu.innerHTML =
+    `<div onclick="setCat('all')" class="px-4 py-3 hover:bg-blue-900 cursor-pointer">
       All Categories
     </div>`;
   cats.forEach(c => {
@@ -125,10 +112,8 @@ function setCat(cat) {
   renderMovies();
 }
 
-/* SEARCH */
 searchInput.addEventListener('input', renderMovies);
 
-/* RENDER MOVIES */
 function renderMovies() {
   const q = searchInput.value.toLowerCase();
   moviesDiv.innerHTML = "";
@@ -140,10 +125,10 @@ function renderMovies() {
     )
     .forEach(m => {
       moviesDiv.innerHTML += `
-        <a href="movie.html?id=${encodeURIComponent(m.id)}" class="group">
-          <div class="bg-black/60 rounded-xl overflow-hidden hover:ring-2 ring-blue-600 transition">
+        <a href="movie.html?id=${m.id}" class="group">
+          <div class="bg-black/60 rounded-2xl overflow-hidden hover:ring-2 ring-blue-600 transition">
             <img src="${m.poster}"
-              class="h-44 sm:h-48 w-full object-cover group-hover:scale-105 transition">
+              class="h-48 w-full object-cover group-hover:scale-105 transition">
             <div class="p-2">
               <h3 class="text-sm font-semibold leading-tight group-hover:text-blue-400">
                 ${m.title}
@@ -153,13 +138,6 @@ function renderMovies() {
         </a>`;
     });
 }
-</script>
-
-<!-- BASIC PROTECTION -->
-<script>
-document.addEventListener('contextmenu', e => e.preventDefault());
-document.addEventListener('selectstart', e => e.preventDefault());
-document.addEventListener('dragstart', e => e.preventDefault());
 </script>
 
 </body>
