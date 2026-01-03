@@ -3,22 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Movie | Doanin</title>
+<title>Movie • Doanin</title>
+
 <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-black text-white min-h-screen">
+<body class="bg-gradient-to-b from-black via-slate-900 to-blue-950 text-white min-h-screen">
 
 <header class="p-4 bg-black/80 flex items-center">
   <a href="index.html" class="mr-4 text-xl">←</a>
-  <span class="text-blue-400 font-bold">Doanin</span>
+  <span class="text-blue-400 font-bold">DOANIN</span>
 </header>
 
 <main class="p-4 max-w-3xl mx-auto">
   <div id="movie"></div>
 </main>
 
-<footer class="text-center text-gray-500 text-xs py-6">
+<footer class="text-center text-gray-400 text-xs py-6">
 © Doanin
 </footer>
 
@@ -26,58 +27,49 @@
 const movieBox = document.getElementById('movie');
 const id = new URLSearchParams(location.search).get('id');
 
-loadMovies().then(data=>{
-  const m = data.find(x=>x.id===id);
-  if(!m){
-    movieBox.innerHTML="<p>Movie not found</p>";
+fetch('data/movies/data.json')
+.then(res => res.json())
+.then(data => {
+  const m = data.find(x => x.id === id);
+  if (!m) {
+    movieBox.innerHTML = "<p>Movie not found</p>";
     return;
   }
 
-  let downloads="";
-  Object.entries(m.downloads).forEach(([q,url])=>{
-    downloads+=`
+  let downloadLinks = '';
+  Object.entries(m.downloads).forEach(([q, url]) => {
+    downloadLinks += `
       <a href="${url}" download
-       class="block px-4 py-3 hover:bg-blue-900 text-sm">${q}</a>`;
+        class="block px-4 py-3 hover:bg-blue-900 text-sm">${q}</a>`;
   });
 
-  movieBox.innerHTML=`
-    <img src="${m.poster}" class="rounded-xl w-full max-h-80 object-cover">
-    
-    <h1 class="text-2xl font-bold mt-4">${m.title}</h1>
-    <p class="text-gray-400 mt-2 text-sm leading-relaxed">${m.description}</p>
+  movieBox.innerHTML = `
+    <img src="${m.poster}" class="rounded-2xl w-full max-h-80 object-cover shadow-xl">
 
-    <!-- WATCH BUTTON -->
+    <h1 class="text-2xl font-bold mt-4">${m.title}</h1>
+    <p class="text-gray-300 mt-2 text-sm leading-relaxed">${m.description}</p>
+
     <a href="${m.watchUrl}" target="_blank"
-     class="block mt-6 text-center bg-blue-600 py-3 rounded-lg font-semibold hover:bg-blue-700">
-     ▶ Watch Now
+      class="block mt-6 text-center bg-blue-600 py-3 rounded-xl font-semibold hover:bg-blue-700">
+      ▶ Watch Now
     </a>
 
-    <!-- DOWNLOAD -->
     <div class="relative mt-4">
       <button onclick="toggleDownload()"
-       class="w-full bg-gray-900 border border-blue-700 p-3 rounded-lg flex justify-between">
-       Download
-       <span>▼</span>
+        class="w-full bg-black/60 border border-blue-800 p-3 rounded-xl flex justify-between">
+        Download
+        <span>▼</span>
       </button>
       <div id="downloadMenu"
-       class="hidden absolute w-full bg-black border border-blue-700 rounded-lg mt-1">
-       ${downloads}
+        class="hidden absolute w-full bg-black border border-blue-800 rounded-xl mt-1">
+        ${downloadLinks}
       </div>
     </div>
   `;
 });
 
-function toggleDownload(){
+function toggleDownload() {
   document.getElementById('downloadMenu').classList.toggle('hidden');
-}
-</script>
-
-<!-- JSON LOADER -->
-<script>
-async function loadMovies() {
-  const res = await fetch('data/movies/data.enc');
-  const encrypted = await res.text();
-  return JSON.parse(atob(encrypted.trim()));
 }
 </script>
 
