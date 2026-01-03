@@ -1,50 +1,126 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>ExosMovies Admin</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Movie JSON Generator</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-black text-white flex items-center justify-center min-h-screen">
 
-<div class="bg-gray-900 p-6 rounded-xl w-full max-w-md border border-gray-800">
-  <h1 class="text-xl font-bold text-cyan-400 mb-4 text-center">ExosMovies Admin</h1>
+<body class="bg-gradient-to-br from-black via-slate-900 to-blue-950 text-white min-h-screen">
 
-  <input id="title" placeholder="Movie Name" class="w-full mb-2 p-2 bg-gray-800 rounded" />
-  <input id="thumbnail" placeholder="Thumbnail URL" class="w-full mb-2 p-2 bg-gray-800 rounded" />
-  <input id="video" placeholder="Video URL" class="w-full mb-2 p-2 bg-gray-800 rounded" />
+<header class="p-4 border-b border-blue-900 bg-black/80">
+  <h1 class="text-xl font-bold text-blue-400">Movie JSON Generator</h1>
+  <p class="text-xs text-gray-400">Fill fields → Generate JSON object</p>
+</header>
 
-  <select id="type" class="w-full mb-2 p-2 bg-gray-800 rounded">
-    <option value="hollywood">Hollywood</option>
-    <option value="bollywood">Bollywood</option>
-    <option value="south">South</option>
-  </select>
+<main class="p-4 max-w-3xl mx-auto space-y-4">
 
-  <input id="token" placeholder="Admin Token" class="w-full mb-4 p-2 bg-gray-800 rounded" />
+  <!-- BASIC INFO -->
+  <div class="bg-black/60 rounded-2xl p-4 space-y-3">
+    <h2 class="font-semibold text-blue-300">Basic Info</h2>
 
-  <button onclick="addMovie()" class="w-full bg-cyan-500 hover:bg-cyan-600 py-2 rounded font-semibold">Add Movie</button>
+    <input id="id" placeholder="Movie ID (e.g. m3)"
+      class="w-full p-3 rounded-xl bg-black border border-blue-800 text-sm">
 
-  <p id="msg" class="mt-3 text-sm text-center"></p>
-</div>
+    <input id="title" placeholder="Title"
+      class="w-full p-3 rounded-xl bg-black border border-blue-800 text-sm">
+
+    <input id="category" placeholder="Category (Action, Sci-Fi...)"
+      class="w-full p-3 rounded-xl bg-black border border-blue-800 text-sm">
+
+    <input id="poster" placeholder="Poster URL / path"
+      class="w-full p-3 rounded-xl bg-black border border-blue-800 text-sm">
+
+    <input id="watchUrl" placeholder="Watch URL"
+      class="w-full p-3 rounded-xl bg-black border border-blue-800 text-sm">
+
+    <textarea id="description" rows="3"
+      placeholder="Description"
+      class="w-full p-3 rounded-xl bg-black border border-blue-800 text-sm"></textarea>
+  </div>
+
+  <!-- DOWNLOADS -->
+  <div class="bg-black/60 rounded-2xl p-4 space-y-3">
+    <h2 class="font-semibold text-blue-300">Download Links (Optional)</h2>
+
+    <input id="d240" placeholder="240p download URL"
+      class="w-full p-3 rounded-xl bg-black border border-blue-800 text-sm">
+
+    <input id="d360" placeholder="360p download URL"
+      class="w-full p-3 rounded-xl bg-black border border-blue-800 text-sm">
+
+    <input id="d480" placeholder="480p download URL"
+      class="w-full p-3 rounded-xl bg-black border border-blue-800 text-sm">
+  </div>
+
+  <!-- ACTIONS -->
+  <div class="flex gap-3">
+    <button onclick="generateJSON()"
+      class="flex-1 bg-blue-600 hover:bg-blue-700 py-3 rounded-xl font-semibold">
+      Generate JSON
+    </button>
+
+    <button onclick="copyJSON()"
+      class="flex-1 bg-green-600 hover:bg-green-700 py-3 rounded-xl font-semibold">
+      Copy JSON
+    </button>
+  </div>
+
+  <!-- OUTPUT -->
+  <div class="bg-black rounded-2xl p-4 border border-blue-900">
+    <h2 class="text-sm text-blue-300 mb-2">Generated JSON (single object)</h2>
+    <pre id="output"
+      class="text-xs text-gray-200 whitespace-pre-wrap break-all"></pre>
+  </div>
+
+</main>
+
+<footer class="text-center py-6 text-gray-400 text-xs">
+© Doanin • JSON Tool
+</footer>
 
 <script>
-function addMovie() {
-  fetch('/api/add-movie', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      title: title.value,
-      thumbnail: thumbnail.value,
-      video: video.value,
-      type: type.value,
-      token: token.value
-    })
-  })
-  .then(r => r.json())
-  .then(d => {
-    msg.innerText = d.success ? 'Movie added successfully!' : d.error;
-  })
-  .catch(() => msg.innerText = 'Error adding movie');
+function generateJSON() {
+  const data = {};
+
+  const id = val("id");
+  const title = val("title");
+  const category = val("category");
+  const poster = val("poster");
+  const watchUrl = val("watchUrl");
+  const description = val("description");
+
+  if (id) data.id = id;
+  if (title) data.title = title;
+  if (description) data.description = description;
+  if (poster) data.poster = poster;
+  if (category) data.category = category;
+  if (watchUrl) data.watchUrl = watchUrl;
+
+  const downloads = {};
+  if (val("d240")) downloads["240p"] = val("d240");
+  if (val("d360")) downloads["360p"] = val("d360");
+  if (val("d480")) downloads["480p"] = val("d480");
+
+  if (Object.keys(downloads).length > 0) {
+    data.downloads = downloads;
+  }
+
+  document.getElementById("output").textContent =
+    JSON.stringify(data, null, 2);
+}
+
+function val(id) {
+  return document.getElementById(id).value.trim();
+}
+
+function copyJSON() {
+  const text = document.getElementById("output").textContent;
+  if (!text) return alert("Generate JSON first!");
+  navigator.clipboard.writeText(text);
+  alert("JSON copied!");
 }
 </script>
 
