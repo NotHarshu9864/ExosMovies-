@@ -24,5 +24,13 @@
       "360p": "https://example.com/inception-360.mp4",
       "480p": "https://example.com/inception-480.mp4"
     }
-  }
+  },
+{
+  "id": "m3",
+  "title": "Pushpa 2",
+  "description": "Pushpa 2 hai",
+  "poster": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJO6pYxJcbPUfYavDs3RSqWZZwLnkN1pyOTpLm-nLTuQ&s=10",
+  "category": "South",
+  "watchUrl": "lol"
+}
 ]
